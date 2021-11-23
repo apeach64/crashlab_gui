@@ -9,7 +9,7 @@ pwd = "C:/Users/Lee/anaconda3/envs/crashlab/Scripts/image/"
 #ubuntu
 #pwd = 
 
-class first(Tk):
+class main_ui(Tk):
 	
 	def __init__(self):
 		super().__init__()
@@ -33,22 +33,22 @@ class first(Tk):
 		self.nextButton.place(x=450, y=480)
 
 	def Button1_clk(self):
-		First.BackGroundSetting("background2")
+		main_ui.BackGroundSetting("background2")
 		print('page2')
-		First.Button2_Y()
-		First.Button2_N()
+		main_ui.Button2_Y()
+		main_ui.Button2_N()
 	
 	def Button2_Y(self):
 		src=Image.open(pwd+"button2_Y.png")
 		src=src.resize((200, 100), Image.ANTIALIAS)
 		self.yesButtonImage=ImageTk.PhotoImage(src)
-		self.lab_Button_Y=Button(self, image=self.yesButtonImage, command=self.Button2_Y_clk, border=0, cursor='heart')
+		self.lab_Button_Y=Button(self, image=self.yesButtonImage, command=self.Button2_Y_clk, border=0)
 		self.lab_Button_Y.place(x=700, y=450)
 
 	def Button2_Y_clk(self):
 		print('page3')
-		First.BackGroundSetting("background3")
-		First.tracking()
+		main_ui.BackGroundSetting("background3")
+		main_ui.tracking()
 
 	def Button2_N(self):
 		src=Image.open(pwd+"button2_N.png")
@@ -59,8 +59,8 @@ class first(Tk):
 
 	def Button2_N_clk(self):
 		print('page1')
-		First.BackGroundSetting("background1")
-		First.Button1()
+		main_ui.BackGroundSetting("background1")
+		main_ui.Button1()
 
 	def tracking(self):
 		print('tracking')
@@ -74,6 +74,7 @@ class first(Tk):
 		src=Image.open(pwd+"footprint_80.png")
 		src=src.resize((50, 50), Image.ANTIALIAS)
 		self.footprintImage80=ImageTk.PhotoImage(src)
+		#footprint image label
 		self.lab_foot_L0=Label(image =self.footprintImage0, border = 0)
 		self.lab_foot_R1=Label(image =self.footprintImage0, border = 0)
 		self.lab_foot_L2=Label(image =self.footprintImage50, border = 0)
@@ -81,41 +82,57 @@ class first(Tk):
 		self.lab_foot_L4=Label(image =self.footprintImage80, border = 0)
 		self.lab_foot_R5=Label(image =self.footprintImage80, border = 0)
 
-
-		global fp_finish
+		global fp_finish #for loop
 		fp_finish =0
-		First.footprint_choose()
+		main_ui.footprint_choose()
 
 	def footprint_choose(self):
 		global i 
+		global max_i
 		global fp_finish
-		if i == 1:
-			i = 21
+
+		max_i = 21
+
+		if i == 2:
+			 # max
+			main_ui.footprint_reset()
 		if i % 2 == 0:
 			i -= 1
-			First.footprint_L(self.lab_foot_L0)
+			main_ui.footprint_L(self.lab_foot_L0)
 		else:
 			i -= 1
-			First.footprint_R(self.lab_foot_R1)
+			main_ui.footprint_R(self.lab_foot_R1)
 
 		if fp_finish == 0:
-			threading.Timer(1, First.footprint_choose).start()
+			threading.Timer(0.5, main_ui.footprint_choose).start()
+
+	def footprint_reset(self):
+		global i 
+		global max_i
+		i = max_i
+		self.lab_foot_L0.place_forget()
+		self.lab_foot_L2.place_forget()
+		self.lab_foot_L4.place_forget()
+		self.lab_foot_R3.place_forget()
+		self.lab_foot_R5.place_forget()
 
 	def footprint_L(self, foot):
 		global i
+		
 		y_foot_L = i*30
 		foot.place(x=955, y=y_foot_L)
-		if y_foot_L <570:
+		if i < max_i-2:
 			self.lab_foot_L2.place(x=955, y=y_foot_L+60)
-		if y_foot_L <510:
+		if i < max_i-4:
 			self.lab_foot_L4.place(x=955, y=y_foot_L+120)
+
 	def footprint_R(self, foot):
 		global i
 		y_foot_R = i*30 
 		foot.place(x=1000, y=y_foot_R)
-		if y_foot_R <570:
+		if i < max_i-2:
 			self.lab_foot_R3.place(x=1000, y=y_foot_R+60)
-		if y_foot_R <510:
+		if i < max_i-4:
 			self.lab_foot_R5.place(x=1000, y=y_foot_R+120)
 	
 	def Button5(self):
@@ -127,8 +144,8 @@ class first(Tk):
 
 	def Button5_clk(self):
 		print("page6")
-		First.BackGroundSetting("background1")
-		First.Button6()
+		main_ui.BackGroundSetting("background1")
+		main_ui.Button6()
 
 	def Button6(self):
 		src=Image.open(pwd+"NextButton.png")
@@ -138,7 +155,7 @@ class first(Tk):
 		self.nextButton.place(x=450, y=400)
 
 	def Button6_clk(self):
-		First.BackGroundSetting("background1")
+		main_ui.BackGroundSetting("background1")
 	
 	#back home
 	def Page7(self):
@@ -146,7 +163,7 @@ class first(Tk):
 		
 
 if __name__ == "__main__":
-	First = first()
-	First.BackGroundSetting("background1")
-	First.Button1()
-	First.mainloop()
+	main_ui = main_ui()
+	main_ui.BackGroundSetting("background1")
+	main_ui.Button1()
+	main_ui.mainloop()
