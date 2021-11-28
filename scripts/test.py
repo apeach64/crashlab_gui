@@ -19,7 +19,7 @@ class main_ui(Tk):
 	
 	def __init__(self):
 		super().__init__()
-		self.geometry("1200x700")
+		self.geometry("1550x860")
 		#self.geometry('%dx%d+%d+%d' %(w,h,x,y))
 		self.resizable(False, False)
 
