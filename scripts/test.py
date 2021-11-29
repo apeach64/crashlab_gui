@@ -19,7 +19,7 @@ class main_ui(Tk):
 	
 	def __init__(self):
 		super().__init__()
-		self.geometry("1550x860")
+		self.geometry("1024x600")
 		#self.geometry('%dx%d+%d+%d' %(w,h,x,y))
 		self.resizable(False, False)
 
@@ -27,22 +27,30 @@ class main_ui(Tk):
 		global i
 		i = 21
 
-		#ros
-		rospy.init_node('rfid_gui', anonymous=True)
+		#ros GUI_mode
+		rospy.init_node('gui', anonymous=True)
+		self.pub = rospy.Publisher('gui_mode', Int32, queue_size=10)
+		self.mode_num = 1
+
 
 	def BackGroundSetting(self, bgname):
-		self.backGroundImage=PhotoImage(file=pwd+bgname+".png")
+		src=Image.open(pwd+bgname+".png")
+		src=src.resize((1024, 600), Image.ANTIALIAS)
+		self.backGroundImage=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel=Label(self, image=self.backGroundImage)
 		self.backGroundImageLabel.place(x=0, y=0)
+
+		self.pub.publish(main_ui.mode_num)
 
 	def Button1(self):
 		src=Image.open(pwd+"button_go_big.png")
 		src=src.resize((350, 150), Image.ANTIALIAS)
 		self.gobigButtonImage=ImageTk.PhotoImage(src)
 		self.gobigButton=Button(self, image=self.gobigButtonImage, command=self.Button1_clk, border=0)
-		self.gobigButton.place(x=800, y=500)
+		self.gobigButton.place(x=600, y=450)
 
 	def Button1_clk(self):
+		self.mode_num = 2
 		main_ui.BackGroundSetting("background2")
 		print('page2')
 		main_ui.page2_cat_init()
@@ -51,12 +59,12 @@ class main_ui(Tk):
 	def page2_cat_init(self):
 		#define cat image
 		src=Image.open(pwd+"cat_normal.png")
-		src=src.resize((100, 100), Image.ANTIALIAS)
+		src=src.resize((150, 150), Image.ANTIALIAS)
 		self.catnormalImage=ImageTk.PhotoImage(src)
 		self.lab_cat_normal=Label(image =self.catnormalImage, border = 0)
 
 		src=Image.open(pwd+"cat_sad.png")
-		src=src.resize((100, 100), Image.ANTIALIAS)
+		src=src.resize((150, 150), Image.ANTIALIAS)
 		self.catsadImage=ImageTk.PhotoImage(src)
 		self.lab_cat_sad=Label(image =self.catsadImage, border = 0)
 
@@ -67,18 +75,26 @@ class main_ui(Tk):
 		second = 6
 		
 		if self.cycle < 3:
-			self.lab_cat_normal.place(x=100+100*self.cycle, y=500)
+			self.mode_num = 21
+			self.pub.publish(main_ui.mode_num)
+
+			self.lab_cat_normal.place(x=100+100*self.cycle, y=400)
 			self.cycle += 1
 		
 		else:
+			self.mode_num = 22
+			self.pub.publish(main_ui.mode_num)
+
 			self.lab_cat_normal.place_forget()
-			self.lab_cat_sad.place(x=100+100*self.cycle, y=600)
+			self.lab_cat_sad.place(x=100+100*self.cycle, y=400)
 			self.cycle += 1
 
 		if self.cycle < 7:
 			main_ui.after(int(second/6*1000), main_ui.page2_cat)
 		
 		else:
+			self.mode_num = 3
+
 			main_ui.BackGroundSetting("background3")
 			print('page3')
 			main_ui.Button3_Y()
@@ -88,24 +104,29 @@ class main_ui(Tk):
 
 	def Button3_Y(self):
 		src=Image.open(pwd+"button_go.png")
-		src=src.resize((250, 125), Image.ANTIALIAS)
+		src=src.resize((200, 100), Image.ANTIALIAS)
 		self.yesButtonImage=ImageTk.PhotoImage(src)
 		self.lab_Button_Y=Button(self, image=self.yesButtonImage, command=self.Button3_Y_clk, border=0)
-		self.lab_Button_Y.place(x=330, y=450)
+		self.lab_Button_Y.place(x=290, y=450)
 
 	def Button3_Y_clk(self):
+		self.mode_num = 4
+
 		print('page4')
 		main_ui.BackGroundSetting("background4")
 		main_ui.Button4()
 
 	def Button3_N(self):
 		src=Image.open(pwd+"button_busy.png")
-		src=src.resize((250, 125), Image.ANTIALIAS)
+		src=src.resize((200, 100), Image.ANTIALIAS)
 		self.noButtonImage=ImageTk.PhotoImage(src)
 		self.lab_Button_N=Button(self, image=self.noButtonImage, command=self.Button3_N_clk, border=0)
-		self.lab_Button_N.place(x=620, y=450)
+		self.lab_Button_N.place(x=510, y=450)
 
 	def Button3_N_clk(self):
+		self.mode_num = 1
+
+
 		print('page1')
 		main_ui.BackGroundSetting("background1")
 		main_ui.Button1()
@@ -114,9 +135,11 @@ class main_ui(Tk):
 
 	def Button4(self):
 		self.gobigButton=Button(self, image=self.gobigButtonImage, command=self.Button4_clk, border=0)
-		self.gobigButton.place(x=730, y=500)
+		self.gobigButton.place(x=600, y=400)
 
 	def Button4_clk(self):
+		self.mode_num =5
+
 		main_ui.BackGroundSetting("background5")
 		print('page5')
 		main_ui.tracking()
@@ -148,9 +171,6 @@ class main_ui(Tk):
 		main_ui.footprint_choose()
 
 	def callback(self, msg):
-		#rospy.loginfo(rospy.get_caller_id(), msg.data)
-		#print(msg.data)
-
 		if msg.data == 1:
 			self.rfid = 1
 
@@ -176,6 +196,8 @@ class main_ui(Tk):
 			main_ui.after(500, main_ui.footprint_choose)
 
 		else : 
+			self.mode_num = 6
+
 			main_ui.BackGroundSetting("background6")
 			main_ui.Button6_Y()
 			print('page6')
@@ -194,27 +216,30 @@ class main_ui(Tk):
 
 	def footprint_L(self, foot):
 		global i
-		rospy.Subscriber('finish', Int32, self.callback)
-
+		
 		y_foot_L = i*30
-		foot.place(x=875, y=y_foot_L)
+		foot.place(x=775, y=y_foot_L)
 		if i < max_i-2:
-			self.lab_foot_L2.place(x=875, y=y_foot_L+60)
+			self.lab_foot_L2.place(x=775, y=y_foot_L+60)
 		if i < max_i-4:
-			self.lab_foot_L4.place(x=875, y=y_foot_L+120)
+			self.lab_foot_L4.place(x=775, y=y_foot_L+120)
+
+		rospy.Subscriber('finish', Int32, main_ui.callback)
 
 	def footprint_R(self, foot):
 		global i
-		rospy.Subscriber('finish', Int32, self.callback)
 		
-		y_foot_R = i*30 
-		foot.place(x=925, y=y_foot_R)
+		y_foot_R = i*30
+
+		foot.place(x=825, y=y_foot_R)
 
 		if i < max_i-2:
-			self.lab_foot_R3.place(x=925, y=y_foot_R+60)
+			self.lab_foot_R3.place(x=825, y=y_foot_R+60)
 
 		if i < max_i-4:
-			self.lab_foot_R5.place(x=925, y=y_foot_R+120)
+			self.lab_foot_R5.place(x=825, y=y_foot_R+120)
+
+		rospy.Subscriber('finish', Int32, main_ui.callback)
 
 
 
@@ -223,9 +248,11 @@ class main_ui(Tk):
 		src=src.resize((300, 150), Image.ANTIALIAS)
 		self.okayButtonImage=ImageTk.PhotoImage(src)
 		self.okayButton=Button(self, image=self.okayButtonImage, command=self.Button6_Y_clk, border=0)
-		self.okayButton.place(x=500, y=550)
+		self.okayButton.place(x=550, y=450)
 
 	def Button6_Y_clk(self):
+		self.mode_num = 7
+
 		print("page7")
 		#main_ui.BackGroundSetting("background7")
 		#main_ui.Button7()
@@ -265,6 +292,9 @@ class main_ui(Tk):
 
 if __name__ == "__main__":
 	main_ui = main_ui()
+	print("main"+str(main_ui.mode_num))
+	
+	
 	main_ui.BackGroundSetting("background1")
 	main_ui.Button1()
 	main_ui.mainloop()

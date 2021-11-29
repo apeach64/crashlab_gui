@@ -13,54 +13,53 @@ global pwd
 #window
 #pwd = "C:/Users/Lee/anaconda3/envs/crashlab/Scripts/image/"
 #ubuntu
-pwd = "/home/jihwa/catkin_ws/src/crashlab_gui/image/BLINK/"
-#pwd = "/home/jihwa/catkin_ws/src/crashlab_gui/image/"
+pwd = "/home/jihwa/catkin_ws/src/crashlab_gui/image/"
 
 class eye_ui(Tk):
 	
 	def __init__(self):
 		super().__init__()
-		self.geometry("1210x760")
+		self.geometry("800x480")
 		#self.geometry('%dx%d+%d+%d' %(w,h,x,y))
 		self.resizable(False, False)
 
-		self.mode = 0
-		self.mode_new = 0
+		self.ui_page = 0
+		self.mode_new = "BLINK"
 		self.direction = 0 
 
 		#ros
-		rospy.init_node('eyes_gui', anonymous=True)
+		rospy.init_node('cat_eyes', anonymous=True)
 
 
 	def BackGroundSetting(self, bgname):
 
-		src=Image.open(pwd+bgname+"1.png")
-		src=src.resize((1210, 760), Image.ANTIALIAS)
+		src=Image.open(pwd+bgname+"/"+bgname+"1.PNG")
+		src=src.resize((800, 480), Image.ANTIALIAS)
 		self.backGroundImage1=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel1=Label(self, image=self.backGroundImage1)
 
-		src=Image.open(pwd+bgname+"2.png")
-		src=src.resize((1210, 760), Image.ANTIALIAS)
+		src=Image.open(pwd+bgname+"/"+bgname+"2.PNG")
+		src=src.resize((800, 480), Image.ANTIALIAS)
 		self.backGroundImage2=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel2=Label(self, image=self.backGroundImage2)
 
-		src=Image.open(pwd+bgname+"3.png")
-		src=src.resize((1210, 760), Image.ANTIALIAS)
+		src=Image.open(pwd+bgname+"/"+bgname+"3.PNG")
+		src=src.resize((800, 480), Image.ANTIALIAS)
 		self.backGroundImage3=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel3=Label(self, image=self.backGroundImage3)
 
-		src=Image.open(pwd+bgname+"4.png")
-		src=src.resize((1210, 760), Image.ANTIALIAS)
+		src=Image.open(pwd+bgname+"/"+bgname+"4.PNG")
+		src=src.resize((800, 480), Image.ANTIALIAS)
 		self.backGroundImage4=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel4=Label(self, image=self.backGroundImage4)
 
-		src=Image.open(pwd+bgname+"5.png")
-		src=src.resize((1210, 760), Image.ANTIALIAS)
+		src=Image.open(pwd+bgname+"/"+bgname+"5.PNG")
+		src=src.resize((800, 480), Image.ANTIALIAS)
 		self.backGroundImage5=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel5=Label(self, image=self.backGroundImage5)
 
-		src=Image.open(pwd+bgname+"6.png")
-		src=src.resize((1210, 760), Image.ANTIALIAS)
+		src=Image.open(pwd+bgname+"/"+bgname+"6.PNG")
+		src=src.resize((800, 480), Image.ANTIALIAS)
 		self.backGroundImage6=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel6=Label(self, image=self.backGroundImage6)
 
@@ -76,7 +75,9 @@ class eye_ui(Tk):
 		self.backGroundImageLabel1.place(x=0, y=0)
 		
 		if self.mode == self.mode_new:
+
 			eye_ui.after(1000, eye_ui.BackGround2)
+			
 			if self.direction == 1:
 				self.direction = 0	
 		else:
@@ -143,6 +144,7 @@ class eye_ui(Tk):
 			self.backGroundImageLabel4.place_forget()
 		else : 
 			self.backGroundImageLabel6.place_forget()
+
 		self.backGroundImageLabel5.place(x=0, y=0)
 
 		if self.mode == self.mode_new:
@@ -159,36 +161,47 @@ class eye_ui(Tk):
 		self.backGroundImageLabel6.place(x=0, y=0)
 
 		if self.mode == self.mode_new:
-			if self.direction ==0:
-				eye_ui.after(100, eye_ui.BackGround5)
+			if self.direction == 0:
+				eye_ui.after(1000, eye_ui.BackGround5)
 				self.direction = 1
 		else:
 			eye_ui.main()
 
-
+	def callback(self, msg):
+		print(msg.data)
+		
+		ui_page = int(msg.data)
+		
+		if ui_page == 1:
+			self.mode_new = "SIDE"
+		elif ui_page == 21 or ui_page == 5:
+			self.mode_new = "BLINK"
+		elif ui_page == 22:
+			self.mode_new = "SAD"
+		elif ui_page == 3:
+			self.mode_new = "BLINK"
+		elif ui_page == 4 or ui_page == 6:
+			self.mode_new = "LOVE"
+		else:
+			self.mode_new = "BLINK"
+		print(self.mode_new + "/" + self.mode)
+		
 
 	def main(self):
-		print(str(self.mode) + "main")
-		if self.mode == 0:
-			self.mode = self.mode_new
-			print("in")
-			eye_ui.BackGroundSetting("blink")
-			eye_ui.BackGround1()
-		elif self.mode ==1:
-			self.mode = self.mode_new
-			eye_ui.BackGroundSetting(sad)
-		elif self.mode ==2:
-			self.mode = self.mode_new
-			eye_ui.BackGroundSetting(heart)
-		else:
-			self.mode = self.mode_new
-			eye_ui.BackGroundSetting(twinker)
+		print(self.mode_new + "main")
+
+		self.mode = self.mode_new
+
+		eye_ui.BackGroundSetting(self.mode)
+		eye_ui.BackGround1()
 
 		
 
 if __name__ == "__main__":
 
 	eye_ui = eye_ui()
+	rospy.Subscriber('gui_mode', Int32, eye_ui.callback)
+
 	eye_ui.main()
 	eye_ui.mainloop()
 	
