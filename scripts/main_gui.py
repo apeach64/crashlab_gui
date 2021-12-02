@@ -73,7 +73,8 @@ class main_ui(Tk):
 		main_ui.page2_cat()
 
 	def page2_cat(self):
-		second = 6
+		second2 = 6
+		second3 = 5
 		
 		if self.cycle == 0:
 			self.mode_num = 21
@@ -127,17 +128,18 @@ class main_ui(Tk):
 
 
 		if self.cycle < 8:
-			main_ui.after(int(second/7*1000), main_ui.page2_cat)
+			main_ui.after(int(second2/7*1000), main_ui.page2_cat)
 		
 		else:
 			self.mode_num = 3
 
 			main_ui.BackGroundSetting("background3")
 			print('page3')
-			main_ui.Button3_Y()
-			main_ui.Button3_N()
+			main_ui.after(second3*1000, main_ui.page3)
 
-
+	def page3(self):
+		main_ui.Button3_Y()
+		main_ui.Button3_N()
 
 	def Button3_Y(self):
 		src=Image.open(pwd+"button_good.png")
@@ -147,11 +149,13 @@ class main_ui(Tk):
 		self.lab_Button_Y.place(x=290, y=450)
 
 	def Button3_Y_clk(self):
+		second4 = 5
 		self.mode_num = 4
 
 		print('page4')
 		main_ui.BackGroundSetting("background4")
-		main_ui.Button4()
+		main_ui.after(second4*1000, main_ui.page4)
+		
 
 	def Button3_N(self):
 		src=Image.open(pwd+"button_busy.png")
@@ -167,7 +171,8 @@ class main_ui(Tk):
 		main_ui.BackGroundSetting("background1")
 		main_ui.Button1()
 
-
+	def page4(self):
+		main_ui.Button4()
 
 	def Button4(self):
 		self.gobigButton=Button(self, image=self.gobigButtonImage, command=self.Button4_clk, border=0)
@@ -314,7 +319,7 @@ class main_ui(Tk):
 	def page8(self):
 		self.mode_num = 8
 		main_ui.BackGroundSetting("background13")
-		print("page 8")
+		print("page8")
 		main_ui.page8_wait()
 
 	def page8_wait(self):
@@ -323,7 +328,7 @@ class main_ui(Tk):
 			main_ui.after(500, main_ui.page8_wait)
 		if self.rfid == 2:
 			main_ui.BackGroundSetting("background14")
-			print("page 9")
+			print("page9")
 			main_ui.after(500, main_ui.page9)
 
 
