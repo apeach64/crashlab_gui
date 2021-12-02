@@ -24,6 +24,7 @@ catkin_install_python(PROGRAMS
    scripts/test.py
    scripts/pub_node.py
    scripts/eyes.py
+   scripts/eyes_2.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
