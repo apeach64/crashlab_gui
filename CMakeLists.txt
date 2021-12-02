@@ -21,10 +21,11 @@ include_directories(
 
 
 catkin_install_python(PROGRAMS
-   scripts/test.py
-   scripts/pub_node.py
+   scripts/main_gui.py
    scripts/eyes.py
    scripts/eyes_2.py
+   scripts/eyes_3.py
+   scripts/eyes_final.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

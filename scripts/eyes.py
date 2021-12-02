@@ -62,11 +62,25 @@ class eye_ui(Tk):
 		src=src.resize((800, 480), Image.ANTIALIAS)
 		self.backGroundImage6=ImageTk.PhotoImage(src)
 		self.backGroundImageLabel6=Label(self, image=self.backGroundImage6)
+		"""
+		self.backGroundImageLabel1.place(x=0, y=0)
+		self.backGroundImageLabel2.place(x=0, y=0)
+		self.backGroundImageLabel3.place(x=0, y=0)
+		self.backGroundImageLabel4.place(x=0, y=0)
+		self.backGroundImageLabel5.place(x=0, y=0)
+		self.backGroundImageLabel6.place(x=0, y=0)
+		
 
-
+		self.backGroundImageLabel1.place_forget()
+		self.backGroundImageLabel2.place_forget()
+		self.backGroundImageLabel3.place_forget()
+		self.backGroundImageLabel4.place_forget()
+		self.backGroundImageLabel5.place_forget()
+		self.backGroundImageLabel6.place_forget()
+		"""
 
 	def BackGround1(self):
-		print(str(self.mode) + "page1")
+		#print(str(self.mode) + "page1")
 		try:
 			self.backGroundImageLabel2.place_forget()
 		except:
@@ -84,7 +98,7 @@ class eye_ui(Tk):
 			eye_ui.main()
 		
 	def BackGround2(self):
-		print(str(self.mode)+ "page2")
+		#print(str(self.mode)+ "page2")
 
 		if self.direction == 0:
 			self.backGroundImageLabel1.place_forget()
@@ -102,7 +116,7 @@ class eye_ui(Tk):
 			eye_ui.main()
 
 	def BackGround3(self):
-		print(str(self.mode) + "page3")
+		#print(str(self.mode) + "page3")
 
 		if self.direction == 0:
 			self.backGroundImageLabel2.place_forget()
@@ -120,7 +134,7 @@ class eye_ui(Tk):
 			eye_ui.main()
 
 	def BackGround4(self):
-		print(str(self.mode) + "page4")
+		#print(str(self.mode) + "page4")
 
 		if self.direction == 0:
 			self.backGroundImageLabel3.place_forget()
@@ -138,7 +152,7 @@ class eye_ui(Tk):
 			eye_ui.main()
 
 	def BackGround5(self):
-		print(str(self.mode)+ "page5")
+		#print(str(self.mode)+ "page5")
 
 		if self.direction == 0:
 			self.backGroundImageLabel4.place_forget()
@@ -156,7 +170,7 @@ class eye_ui(Tk):
 			eye_ui.main()
 
 	def BackGround6(self):
-		print(str(self.mode) + "page6")
+		#print(str(self.mode) + "page6")
 		self.backGroundImageLabel5.place_forget()
 		self.backGroundImageLabel6.place(x=0, y=0)
 

@@ -48,7 +48,7 @@ class main_ui(Tk):
 		src=src.resize((350, 150), Image.ANTIALIAS)
 		self.gobigButtonImage=ImageTk.PhotoImage(src)
 		self.gobigButton=Button(self, image=self.gobigButtonImage, command=self.Button1_clk, border=0)
-		self.gobigButton.place(x=600, y=450)
+		self.gobigButton.place(x=620, y=420)
 
 	def Button1_clk(self):
 		self.mode_num = 2
@@ -60,12 +60,12 @@ class main_ui(Tk):
 	def page2_cat_init(self):
 		#define cat image
 		src=Image.open(pwd+"cat_normal.png")
-		src=src.resize((150, 150), Image.ANTIALIAS)
+		src=src.resize((120, 120), Image.ANTIALIAS)
 		self.catnormalImage=ImageTk.PhotoImage(src)
 		self.lab_cat_normal=Label(image =self.catnormalImage, border = 0)
 
 		src=Image.open(pwd+"cat_sad.png")
-		src=src.resize((150, 150), Image.ANTIALIAS)
+		src=src.resize((120, 120), Image.ANTIALIAS)
 		self.catsadImage=ImageTk.PhotoImage(src)
 		self.lab_cat_sad=Label(image =self.catsadImage, border = 0)
 
@@ -75,23 +75,59 @@ class main_ui(Tk):
 	def page2_cat(self):
 		second = 6
 		
-		if self.cycle < 3:
+		if self.cycle == 0:
 			self.mode_num = 21
 			self.pub.publish(main_ui.mode_num)
 
-			self.lab_cat_normal.place(x=100+100*self.cycle, y=400)
+			self.lab_cat_normal.place(x=680, y=500)
+			self.cycle += 1
+
+		elif self.cycle == 1:
+			self.mode_num = 21
+			self.pub.publish(main_ui.mode_num)
+
+			self.lab_cat_normal.place(x=720, y=480)
+			self.cycle += 1
+
+		elif self.cycle == 2:
+			self.mode_num = 21
+			self.pub.publish(main_ui.mode_num)
+
+			self.lab_cat_normal.place(x=770, y=460)
 			self.cycle += 1
 		
-		else:
+		elif self.cycle == 3:
+			self.mode_num = 21
+			self.pub.publish(main_ui.mode_num)
+			
+			self.lab_cat_normal.place(x=810, y=440)
+			self.cycle += 1
+
+		elif self.cycle == 4:
 			self.mode_num = 22
 			self.pub.publish(main_ui.mode_num)
 
 			self.lab_cat_normal.place_forget()
-			self.lab_cat_sad.place(x=100+100*self.cycle, y=400)
+			self.lab_cat_sad.place(x=785, y=450)
 			self.cycle += 1
 
-		if self.cycle < 7:
-			main_ui.after(int(second/6*1000), main_ui.page2_cat)
+		elif self.cycle == 5:
+			self.mode_num = 22
+			self.pub.publish(main_ui.mode_num)
+
+			self.lab_cat_sad.place(x=685, y=480)
+			self.cycle += 1
+
+		else:
+			self.mode_num = 22
+			self.pub.publish(main_ui.mode_num)
+
+			self.lab_cat_sad.place(x=830, y=465)
+			self.cycle += 1
+
+
+		if self.cycle < 8:
+			main_ui.after(int(second/7*1000), main_ui.page2_cat)
 		
 		else:
 			self.mode_num = 3
@@ -122,7 +158,7 @@ class main_ui(Tk):
 		src=src.resize((200, 100), Image.ANTIALIAS)
 		self.noButtonImage=ImageTk.PhotoImage(src)
 		self.lab_Button_N=Button(self, image=self.noButtonImage, command=self.Button3_N_clk, border=0)
-		self.lab_Button_N.place(x=510, y=450)
+		self.lab_Button_N.place(x=530, y=450)
 
 	def Button3_N_clk(self):
 		self.mode_num = 1
@@ -171,10 +207,7 @@ class main_ui(Tk):
 		main_ui.footprint_choose()
 
 	def callback(self, msg):
-		if msg.data == 1:
-			self.rfid = 1
-		if msg.data == 2:
-			self.rfid =2
+		self.rfid = msg.data
 
 	def footprint_choose(self):
 		global i
@@ -203,7 +236,7 @@ class main_ui(Tk):
 			main_ui.BackGroundSetting("background6")
 			print('page6')
 			#need to time change 
-			main_ui.after(1000, main_ui.cheering_mode)
+			main_ui.after(6000, main_ui.cheering_mode)
 			
 
 	def footprint_reset(self):
@@ -275,28 +308,33 @@ class main_ui(Tk):
 			self.mode_num = 76
 			main_ui.BackGroundSetting("background12")
 
-		main_ui.after(5000, main_ui.page8)
+		main_ui.after(6000, main_ui.page8)
 
 
 	def page8(self):
 		self.mode_num = 8
 		main_ui.BackGroundSetting("background13")
 		print("page 8")
+		main_ui.page8_wait()
 
-		main_ui.after(5000, main_ui.page9)
+	def page8_wait(self):
+		if self.rfid == 1:
+			rospy.Subscriber('finish', Int32, main_ui.callback)
+			main_ui.after(500, main_ui.page8_wait)
+		if self.rfid == 2:
+			main_ui.BackGroundSetting("background14")
+			print("page 9")
+			main_ui.after(500, main_ui.page9)
+
 
 	def page9(self):
 		self.mode_num = 9
-		main_ui.BackGroundSetting("background14")
-		print("page 9")
-
-		while self.rfid == 1:
+		if self.rfid == 2:
 			rospy.Subscriber('finish', Int32, main_ui.callback)
-			
-			if self.rfid == 2:
-				main_ui.BackGroundSetting("background1")
-				main_ui.Button1()
-				break
+			main_ui.after(500, main_ui.page9)
+		if self.rfid == 3:
+			main_ui.BackGroundSetting("background1")
+			main_ui.Button1()
 
 
 		
