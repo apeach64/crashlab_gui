@@ -172,16 +172,16 @@ class eye_ui(Tk):
 		
 		ui_page = int(msg.data)
 		
-		if ui_page == 1:
-			self.mode_new = "SIDE"
-		elif ui_page == 21 or ui_page == 5:
-			self.mode_new = "BLINK"
+		if ui_page == 1 or ui_page == 9 :
+			self.mode_new = "LR"
 		elif ui_page == 22:
 			self.mode_new = "SAD"
-		elif ui_page == 3:
-			self.mode_new = "BLINK"
-		elif ui_page == 4 or ui_page == 6:
+		elif ui_page == 6:
+			self.mode_new = "SMILE"
+		elif ui_page == 4 or ui_page == 72 or ui_page == 76:
 			self.mode_new = "LOVE"
+		elif ui_page == 73 or ui_page == 75 or ui_page == 8:
+			self.mode_new = "TWINK"
 		else:
 			self.mode_new = "BLINK"
 		print(self.mode_new + "/" + self.mode)

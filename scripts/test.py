@@ -8,6 +8,7 @@ from tkinter import *
 import PIL
 from PIL import Image, ImageTk
 import time
+import random
 
 global pwd
 #window
@@ -43,7 +44,7 @@ class main_ui(Tk):
 		self.pub.publish(main_ui.mode_num)
 
 	def Button1(self):
-		src=Image.open(pwd+"button_go_big.png")
+		src=Image.open(pwd+"button_start_big.png")
 		src=src.resize((350, 150), Image.ANTIALIAS)
 		self.gobigButtonImage=ImageTk.PhotoImage(src)
 		self.gobigButton=Button(self, image=self.gobigButtonImage, command=self.Button1_clk, border=0)
@@ -103,7 +104,7 @@ class main_ui(Tk):
 
 
 	def Button3_Y(self):
-		src=Image.open(pwd+"button_go.png")
+		src=Image.open(pwd+"button_good.png")
 		src=src.resize((200, 100), Image.ANTIALIAS)
 		self.yesButtonImage=ImageTk.PhotoImage(src)
 		self.lab_Button_Y=Button(self, image=self.yesButtonImage, command=self.Button3_Y_clk, border=0)
@@ -125,7 +126,6 @@ class main_ui(Tk):
 
 	def Button3_N_clk(self):
 		self.mode_num = 1
-
 
 		print('page1')
 		main_ui.BackGroundSetting("background1")
@@ -173,6 +173,8 @@ class main_ui(Tk):
 	def callback(self, msg):
 		if msg.data == 1:
 			self.rfid = 1
+		if msg.data == 2:
+			self.rfid =2
 
 	def footprint_choose(self):
 		global i
@@ -199,8 +201,10 @@ class main_ui(Tk):
 			self.mode_num = 6
 
 			main_ui.BackGroundSetting("background6")
-			main_ui.Button6_Y()
 			print('page6')
+			#need to time change 
+			main_ui.after(1000, main_ui.cheering_mode)
+			
 
 	def footprint_reset(self):
 		global i 
@@ -218,11 +222,11 @@ class main_ui(Tk):
 		global i
 		
 		y_foot_L = i*30
-		foot.place(x=775, y=y_foot_L)
+		foot.place(x=725, y=y_foot_L)
 		if i < max_i-2:
-			self.lab_foot_L2.place(x=775, y=y_foot_L+60)
+			self.lab_foot_L2.place(x=725, y=y_foot_L+60)
 		if i < max_i-4:
-			self.lab_foot_L4.place(x=775, y=y_foot_L+120)
+			self.lab_foot_L4.place(x=725, y=y_foot_L+120)
 
 		rospy.Subscriber('finish', Int32, main_ui.callback)
 
@@ -231,63 +235,71 @@ class main_ui(Tk):
 		
 		y_foot_R = i*30
 
-		foot.place(x=825, y=y_foot_R)
+		foot.place(x=775, y=y_foot_R)
 
 		if i < max_i-2:
-			self.lab_foot_R3.place(x=825, y=y_foot_R+60)
+			self.lab_foot_R3.place(x=775, y=y_foot_R+60)
 
 		if i < max_i-4:
-			self.lab_foot_R5.place(x=825, y=y_foot_R+120)
+			self.lab_foot_R5.place(x=775, y=y_foot_R+120)
 
 		rospy.Subscriber('finish', Int32, main_ui.callback)
 
 
 
-	def Button6_Y(self):
-		src=Image.open(pwd+"button_okay.png")
-		src=src.resize((300, 150), Image.ANTIALIAS)
-		self.okayButtonImage=ImageTk.PhotoImage(src)
-		self.okayButton=Button(self, image=self.okayButtonImage, command=self.Button6_Y_clk, border=0)
-		self.okayButton.place(x=550, y=450)
-
-	def Button6_Y_clk(self):
-		self.mode_num = 7
-
+	def cheering_mode(self):
+		cheer_mode = random.randrange(1, 7)
 		print("page7")
-		#main_ui.BackGroundSetting("background7")
-		#main_ui.Button7()
-'''
-	def Button6_N(self):
-		src=Image.open(pwd+"NextButton.png")
-		src=src.resize((100, 100), Image.ANTIALIAS)
-		self.nextButtonImage=ImageTk.PhotoImage(src)
-		self.nextButton=Button(self, image=self.nextButtonImage, command=self.Button6_N_clk, border=0)
-		self.nextButton.place(x=450, y=400)
 
-	def Button6_N_clk(self):
-		print("page1")
-		main_ui.BackGroundSetting("background1")
-		main_ui.Button1()
+		if cheer_mode == 1:
+			self.mode_num = 71
+			main_ui.BackGroundSetting("background7")
+
+		elif cheer_mode == 2:
+			self.mode_num = 72
+			main_ui.BackGroundSetting("background8")
+
+		elif cheer_mode == 3:
+			self.mode_num = 73
+			main_ui.BackGroundSetting("background9")
+
+		elif cheer_mode == 4:
+			self.mode_num = 74
+			main_ui.BackGroundSetting("background10")
+
+		elif cheer_mode == 5:
+			self.mode_num = 75
+			main_ui.BackGroundSetting("background11")
+
+		else:
+			self.mode_num = 76
+			main_ui.BackGroundSetting("background12")
+
+		main_ui.after(5000, main_ui.page8)
 
 
+	def page8(self):
+		self.mode_num = 8
+		main_ui.BackGroundSetting("background13")
+		print("page 8")
 
-	def Button7(self):
-		src=Image.open(pwd+"NextButton.png")
-		src=src.resize((100, 100), Image.ANTIALIAS)
-		self.nextButtonImage=ImageTk.PhotoImage(src)
-		self.nextButton=Button(self, image=self.nextButtonImage, command=self.Button7_clk, border=0)
-		self.nextButton.place(x=450, y=400)
+		main_ui.after(5000, main_ui.page9)
 
-	def Button7_clk(self):
-		main_ui.BackGroundSetting("background1")
-	
-	#back home
-	def Page7(self):
-		print('page1')
-		main_ui.BackGroundSetting("background1")
-		main_ui.Button1()
-	
-'''
+	def page9(self):
+		self.mode_num = 9
+		main_ui.BackGroundSetting("background14")
+		print("page 9")
+
+		while self.rfid == 1:
+			rospy.Subscriber('finish', Int32, main_ui.callback)
+			
+			if self.rfid == 2:
+				main_ui.BackGroundSetting("background1")
+				main_ui.Button1()
+				break
+
+
+		
 
 
 if __name__ == "__main__":
